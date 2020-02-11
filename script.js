@@ -258,6 +258,8 @@ const Controller = (function(display, logic) {
                 console.log('player ' + turn + ' has lost');
                 points[turn]--;
                 console.log(points);
+                logic.whoWin();
+                display.showAll(data.players[0][0], data.players[1][0]);
                 resetAll();
                 } else {
                     holdClick();
@@ -270,15 +272,15 @@ const Controller = (function(display, logic) {
                 display.showAll(data.players[0][0], data.players[1][0]);
             }
         }, 1000);
-        
     }
 
     const calcProb = function(turn) {
 
-        let gap, fav;
+        let gap, fav, visibles, temporary;
 
         gap = 7.5 - totals[turn];
         fav = [];
+        visibles = 0;
 
         deck.flat().forEach(card => {
             value = functions.splitCard(card).numHalf;
@@ -288,9 +290,21 @@ const Controller = (function(display, logic) {
             }
         });
 
+        for(var i = 1; i < players[0].length; i++) {
+            console.log(players[0][i]);
+            temporary = functions.splitCard(players[0][i]).numHalf;
+            temporary = functions.specialCard(temporary);
+            visibles += parseFloat(temporary);
+        }
+
         if((fav.length / deck.flat().length) >= 0.5) {
+            // computer si tira la carta
             return true;
         } else {
+            if(totals[turn] < visibles) {
+                return true;
+            }
+            // computer sta bene
             return false;
         } 
     }
