@@ -52,9 +52,9 @@ const Logic = (function() {
         }
         return deck;
     }
-    deck = buildDeck();
 
     let data = {
+        deck: buildDeck(),
         players: [[], []],
         totals: [0, 0],
         turn: 0
@@ -76,14 +76,6 @@ const Logic = (function() {
         return data.totals;
     }
 
-    // const checkTotal = function(total) {
-    //     if(total > 7.5) {
-    //         console.log('Hai sballato');
-    //     } else if(total == 7.5){
-    //         console.log('7 e mezzo!');
-    //     }
-    // }
-
     const specialCard = function(value) {
         if (value == 8 || value == 9 || value == 10) {
             return value = 0.5;
@@ -92,19 +84,12 @@ const Logic = (function() {
     }
 
     const thereIsLoser = function() {
-
         for(var i = 0; i < data.totals.length; i++) {
             if(data.totals[i] > 7.5) {
                 return i;
             }
-            // if(data.totals[i] > 7.5) {
-            //     return i;
-            // } else {
-            //     return 'continue';
-            // }
         }
     }
-
 
     return {
         test: function() {
@@ -121,7 +106,7 @@ const Logic = (function() {
         getData: function() {
             return {
                 mathData: {
-                    deck: deck,
+                    deck: data.deck,
                     players: data.players,
                     turn: data.turn,
                     totals: data.totals
@@ -129,10 +114,10 @@ const Logic = (function() {
             }
         },
         showDeckHands: function() {
-            console.log('It\'s turn of Player ' + turn)
-            console.table(deck);
-            console.log(players);
-            console.log('Player 0 total: ' + totals[0] + '\nPlayer 1 total: ' + totals[1]);
+            console.log('It\'s turn of Player ' + data.turn)
+            console.table(data.deck);
+            console.log(data.players);
+            console.log('Player 0 total: ' + data.totals[0] + '\nPlayer 1 total: ' + data.totals[1]);
         },
         addCardToHand: function(turn, card) {
 
@@ -170,7 +155,8 @@ const Controller = (function(display, logic) {
     let points = [10, 10];
 
     // get data from math module
-    let data = logic.restartData();
+    let data, deck, players, turn, totals;
+    data = logic.restartData();
         deck = data.deck;
         players = data.players;
         turn = data.turn;
@@ -187,7 +173,8 @@ const Controller = (function(display, logic) {
     const pickCardFromDeck = function() {
         let suit, card;
         suit = Math.floor(Math.random() * (data.deck.length - 1) + 1);
-        card = Math.floor(Math.random() * (deck[suit].length - 1) + 1);
+        card = Math.floor(Math.random() * (data.deck[suit].length - 1) + 1);
+        console.log(suit, card);
         return String(data.deck[suit].splice(card, 1));
     }
 
@@ -215,7 +202,7 @@ const Controller = (function(display, logic) {
     const resetAll = function() {
         console.log('Reset All.')
         
-        logic.restartData();
+        data = logic.restartData();
     
         suit = "";
         value = 0;
@@ -301,7 +288,7 @@ const Controller = (function(display, logic) {
             // computer si tira la carta
             return true;
         } else {
-            if(totals[turn] < visibles) {
+            if(totals[turn] <= visibles) {
                 return true;
             }
             // computer sta bene
