@@ -1,5 +1,7 @@
 const Display = (function() {
     let id = 0;
+    
+    console.log()
 
     return {
         test: function() {
