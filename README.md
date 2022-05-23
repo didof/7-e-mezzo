@@ -1,10 +1,2 @@
 # 7-e-mezzo
-This is a traditional common card game in my home country. 
-csacasca
-
-yooop
-\
-csacas
-csacas
-cascas
-cascascascas
+This is a traditional common card game in my home country.
